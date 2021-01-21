@@ -21,6 +21,7 @@
 #
 # More information available here: https://github.com/fastlane/fastlane/issues/6495
 # -----
+echo "=w= In xcbuild-safe"
 
 which rvm > /dev/null
 # shellcheck disable=SC2181
