@@ -316,6 +316,8 @@ module Fastlane
           # Saves options to plist
           path = "#{Tempfile.new('exportOptions').path}.plist"
           File.write(path, export_options.to_plist)
+          output_result = Actions.sh "echo =w= Check permissions of plist file; ls -al #{path}"
+          puts output_result
           hash[:export_options_plist] = path
         end
         hash
