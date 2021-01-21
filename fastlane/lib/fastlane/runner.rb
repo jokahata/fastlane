@@ -35,7 +35,7 @@ module Fastlane
       Actions.lane_context[Actions::SharedValues::PLATFORM_NAME] = current_platform
       Actions.lane_context[Actions::SharedValues::LANE_NAME] = full_lane_name
 
-      UI.success("=w= Driving the lane '#{full_lane_name}' 🚀")
+      UI.success("Driving the lane '#{full_lane_name}' 🚀")
 
       return_val = nil
 
