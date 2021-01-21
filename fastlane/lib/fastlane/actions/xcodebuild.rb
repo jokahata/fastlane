@@ -317,7 +317,7 @@ module Fastlane
           path = "#{Tempfile.new('exportOptions').path}.plist"
           File.write(path, export_options.to_plist)
           output_result = Actions.sh "ls -al #{path}"
-          UI.error("=w=  Check permissions of plist file #{output_result})"
+          UI.error("=w=  Check permissions of plist file #{output_result}")
           hash[:export_options_plist] = path
         end
         hash
