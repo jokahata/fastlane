@@ -65,7 +65,7 @@ module Fastlane
       exc = nil
 
       begin
-        UI.header("Step: " + step_name) if step_name
+        UI.header("jwj Step: " + step_name) if step_name
         yield
       rescue => ex
         exc = ex
