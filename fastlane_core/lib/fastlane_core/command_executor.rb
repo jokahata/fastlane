@@ -37,7 +37,8 @@ module FastlaneCore
       # @param suppress_output [Boolean] Should we print the command's output?
       # @return [String] All the output as string
       def execute(command: nil, print_all: false, print_command: true, error: nil, prefix: nil, loading: nil, suppress_output: false)
-        print_all = true if FastlaneCore::Globals.verbose?
+        UI.error("=w= command_executor.rb - execute command #{command}")
+        print_all = true
         prefix ||= {}
 
         output = []
@@ -66,6 +67,7 @@ module FastlaneCore
             end
           end
         rescue => ex
+          UI.error("=w= command_executor.rb - execute command and got error #{ex}")
           # FastlanePty adds exit_status on to StandardError so every error will have a status code
           status = ex.exit_status
 
@@ -73,6 +75,7 @@ module FastlaneCore
           # > invalid byte sequence in US-ASCII (ArgumentError)
           output << ex.to_s
           o = output.join("\n")
+          UI.error("=w= command_executor.rb - execute command and got error #{o}")
           puts(o)
           if error
             error.call(o, nil)

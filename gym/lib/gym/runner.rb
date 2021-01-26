@@ -15,20 +15,28 @@ module Gym
     # @return (String) The path to the resulting ipa
     def run
       unless Gym.config[:skip_build_archive]
+        UI.message("=w= runner.rb - build_app")
         build_app
       end
+      UI.message("=w= runner.rb - maybe verify archive")
       verify_archive unless Gym.config[:skip_archive]
 
+      UI.message("=w= runner.rb - skip archive? #{Gym.config[:skip_archive]}")
       return nil if Gym.config[:skip_archive]
 
+      UI.message("=w= runner.rb - Making directory #{File.expand_path(Gym.config[:output_directory])}")
       FileUtils.mkdir_p(File.expand_path(Gym.config[:output_directory]))
 
+      UI.message("=w= runner.rb - Finished making directory")
       # Archive
       if Gym.building_for_ios?
+        UI.message("=w= Gym is building for ios")
         fix_generic_archive unless Gym.project.watchos? # See https://github.com/fastlane/fastlane/pull/4325
         return BuildCommandGenerator.archive_path if Gym.config[:skip_package_ipa]
 
+        UI.message("=w= runner.rb - Finished building command now going to package app")
         package_app
+        UI.message("=w= runner.rb - Finished packing app")
         compress_and_move_dsym
 
         unless Gym.export_destination_upload?
@@ -41,6 +49,7 @@ module Gym
           move_appstore_info
         end
       elsif Gym.building_for_mac?
+        UI.message("=w= Gym is building for mac")
         path = File.expand_path(Gym.config[:output_directory])
         compress_and_move_dsym
         if Gym.project.mac_app? || Gym.building_mac_catalyst_for_mac?
@@ -147,6 +156,7 @@ module Gym
     end
 
     def package_app
+      UI.message("=w= runner.rb - package_app start")
       command = PackageCommandGenerator.generate
       print_command(command, "Generated Package Command") if FastlaneCore::Globals.verbose?
 
@@ -154,12 +164,16 @@ module Gym
                                           print_all: false,
                                       print_command: !Gym.config[:silent],
                                               error: proc do |output|
+                                                UI.message("=w= runner.rb - package_app faced an error #{output}")
                                                 ErrorHandler.handle_package_error(output)
                                               end)
+      UI.message("=w= runner.rb - package_app end")
     end
 
     def compress_and_move_dsym
+      UI.message("=w= In compress_and_move_dsym")
       return unless PackageCommandGenerator.dsym_path
+      UI.message("=w= In compress_and_move_dsym and passed dsym path check")
 
       # Compress and move the dsym file
       containing_directory = File.expand_path("..", PackageCommandGenerator.dsym_path)
@@ -168,6 +182,7 @@ module Gym
       uuid_regex = /[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}/
 
       if Dir.exist?(bcsymbolmaps_directory)
+        UI.message("=w= Has a bcsymbol map so generating and mapping the dsyms")
         UI.message("Mapping dSYM(s) using generated BCSymbolMaps") unless Gym.config[:silent]
         available_dsyms.each do |dsym|
           dwarfdump_command = []

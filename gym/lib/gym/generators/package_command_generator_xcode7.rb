@@ -25,7 +25,7 @@ module Gym
 
         File.write(config_path, config_content) # overwrite everytime. Could be optimized
 
-        UI.error("=w= Generating PackageCommandGeneratorXcode7 which is #{parts}")
+        UI.error("=w= package_command_generator_xcode7.rb - Generating which is #{parts}")
         parts
       end
 
@@ -55,7 +55,7 @@ module Gym
       # Wrap xcodebuild to work-around ipatool dependency to system ruby
       def wrap_xcodebuild
         require 'fileutils'
-        UI.error("=w= Wrapping xcodebuild")
+        UI.error("=w= package_command_generator_xcode7.rb - Wrapping xcodebuild")
         @wrapped_xcodebuild_path ||= File.join(Gym::ROOT, "lib/assets/wrap_xcodebuild/xcbuild-safe.sh")
       end
 
@@ -182,6 +182,7 @@ module Gym
       end
 
       def config_content
+        UI.error("=w= package_command_generator_xcode7.rb - config_content start")
         hash = read_export_options
 
         # Overrides export options if needed
@@ -214,6 +215,7 @@ module Gym
           UI.command_output("-----------------------------------------")
         end
 
+        UI.error("=w= package_command_generator_xcode7.rb - config_content end")
         hash.to_plist
       end
 
